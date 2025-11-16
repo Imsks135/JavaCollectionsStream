@@ -1,0 +1,174 @@
+What is a Stream in Java?
+A Stream is a pipeline of functional operations on a collection or data source.
+✔ Does NOT store data
+✔ Processes data only when needed (lazy)
+✔ Supports functional-style operations
+
+groupingBy()	partitioningBy()
+Many groups	Only 2 groups
+Key-based	Predicate-based
+Map<K, List<T>>	Map<Boolean, List<T>>
+
+What is Collectors.groupingBy()?
+Acts like SQL GROUP BY.
+Example: group words by length
+Map<Integer, List<String>> groups =
+        List.of("aa","bbb","c","dd").stream()
+        .collect(Collectors.groupingBy(String::length));
+Output: 2 → [aa, dd]
+        3 → [bbb]
+        1 → [c]
+
+What does collect() do?
+Converts stream into:
+List,Set,Map,Custom objects
+
+What is a short-circuiting operation in Streams?
+Short-circuit operations stop processing early.
+Examples: findFirst(),findAny(),anyMatch(),limit(),allMatch(),noneMatch()
+
+What does reduce() do?
+Used for aggregation.
+Example 1 — Sum
+int sum = List.of(1,2,3).stream()
+    .reduce(0, (a,b) -> a + b);
+
+Why does reduce() return Optional?
+Because:
+There might be no elements in the stream.
+The result might be undefined for empty input.
+
+What do limit() and skip() do?
+limit(n): Takes the first n elements.
+skip(n): Skips first n elements.
+
+Why is forEach() bad for parallel streams?
+Because ordering is not guaranteed + causes thread-safety issues.
+
+map() vs flatMap()
+map()	flatMap()
+1 → 1	1 → many
+For simple transformation	Flatten nested structure
+
+What is Lazy Evaluation?
+Stream operations run only when a terminal operation is called.
+
+What is an Intermediate Operation?
+Returns a new stream — does not execute immediately.
+Examples: map(), filter(), sorted(), distinct(), limit()
+
+What is a Terminal Operation?
+Ends the stream and returns a result.
+Examples: forEach(), collect(), reduce(), findFirst(), count()
+
+Can a Stream be reused?
+❌ No. Streams are single-use.
+After a terminal operation, it is closed.
+
+Difference between Collection and Stream
+Collection	Stream
+Stores data	Does NOT store data
+Eager evaluation	Lazy
+Can be modified	Cannot be modified
+Iteration external	Internal iteration
+
+Why Streams should NOT modify external state?
+Because Streams rely on:
+immutability
+no side effects
+thread-safety
+
+What is a stateful operation?
+Operations that must remember previous data:
+sorted(),distinct(),limit(),(partially)
+Stateful operations are expensive, especially in parallel streams.
+
+What is a stateless operation?
+No memory needed for previous elements:
+map(),filter(),flatMap()
+
+What is a Spliterator?
+A special iterator used by Streams to:
+Split data into chunks (for parallel streams)
+Traverse in parallel
+Spliterator<Integer> sp = list.stream().spliterator();
+
+How Parallel Streams work internally?
+✔ Break the stream using Spliterator
+✔ Execute chunks using ForkJoinPool.commonPool()
+✔ Combine results
+✔ Maintain immutability
+
+Does Stream guarantee ordering?
+✔ Yes — for ordered streams like List, LinkedHashSet
+❌ No — for unordered streams like HashSet
+HashSet<Integer> set = new HashSet<>(List.of(3,1,2));
+set.stream().forEach(System.out::println); // random order
+
+What is the difference between sequential() and parallel()?
+stream.parallel();    // convert to parallel
+stream.sequential();  // convert back to sequential
+Once converted to parallel, operations run in ForkJoinPool.
+
+Why is flatMap() used?
+To flatten multiple nested lists.
+Example: Convert List<List<Integer>> → List<Integer>
+List<Integer> flat = listOfLists.stream()
+        .flatMap(List::stream)
+        .toList();
+
+What is mapToInt(), mapToLong(), mapToDouble()?
+Used to convert:
+Stream<Integer> → IntStream
+Stream<Double> → DoubleStream
+etc.
+Example: int sum = list.stream().mapToInt(i -> i).sum();
+
+What does boxed() do?
+Converts primitive stream → wrapper stream.
+IntStream.range(1,5)
+         .boxed()
+         .toList();  // List<Integer>
+
+How to join strings in a list using Streams?
+String result = list.stream()
+        .collect(Collectors.joining(", "));
+
+What is Collector and what are its characteristics?
+Collector defines:
+Supplier (initial container)
+Accumulator (add element)
+Combiner (merge partial)
+Finisher (final result)
+Characteristics: UNORDERED, CONCURRENT, IDENTITY_FINISH
+Used to optimize parallel execution.
+
+Collector<Integer, int[], Integer> evenCounter =
+    Collector.of(
+        () -> new int[1],          // supplier
+        (a, b) -> { if (b % 2 == 0) a[0]++; }, // accumulator
+        (a, b) -> { a[0] += b[0]; return a; }, // combiner
+        a -> a[0]                    // finisher
+    );
+
+int evenCount = List.of(1,2,3,4,10)
+                    .stream()
+                    .collect(evenCounter);
+
+What is an infinite stream?
+Stream that generates infinite values using:
+generate()
+iterate()
+Example
+Stream.iterate(1, n -> n + 1)
+      .limit(10)
+      .forEach(System.out::println);
+
+What does partitioningBy() return?
+A Map with:
+true list
+false list
+Example:
+Map<Boolean, List<Integer>> map =
+    list.stream()
+        .collect(Collectors.partitioningBy(i -> i % 2 == 0));

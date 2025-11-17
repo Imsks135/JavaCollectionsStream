@@ -1,4 +1,4 @@
-package org.example;
+package org.threadExample;
 
 public class MultiThreadDemo {
     public static void main(String[] args) {

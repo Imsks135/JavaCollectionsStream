@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.counter;
 
 public class Counter {
      private int count =0;

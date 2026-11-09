@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.prodconsumer;
 
 public class ProducerConsumer {
     public static void main(String[] args) {

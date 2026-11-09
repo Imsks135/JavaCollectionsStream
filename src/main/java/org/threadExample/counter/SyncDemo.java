@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.counter;
 
 public class SyncDemo {
     public static void main(String[] args) throws Exception {

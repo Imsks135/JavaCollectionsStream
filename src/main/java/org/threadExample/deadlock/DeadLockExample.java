@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.deadlock;
 
 public class DeadLockExample {
     public static void main(String[] args) {

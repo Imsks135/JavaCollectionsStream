@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.threadcreation;
 
 public class MyRunnable implements Runnable{
     @Override

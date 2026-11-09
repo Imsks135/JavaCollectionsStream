@@ -1,6 +1,6 @@
-package org.threadExample;
+package org.threadExample.threadcreation;
 
-class MyThread extends Thread{
+public class MyThread extends Thread{
     @Override
     public void run(){
         System.out.println("Thread is running.....");

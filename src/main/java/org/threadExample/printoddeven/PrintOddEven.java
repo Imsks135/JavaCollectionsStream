@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.printoddeven;
 
 public class PrintOddEven {
     public static void main(String[] args) {

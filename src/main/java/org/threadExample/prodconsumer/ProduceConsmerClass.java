@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.prodconsumer;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

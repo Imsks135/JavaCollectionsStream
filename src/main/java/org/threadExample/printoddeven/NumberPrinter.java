@@ -1,4 +1,4 @@
-package org.threadExample;
+package org.threadExample.printoddeven;
 
 public class NumberPrinter {
     int num = 1;
